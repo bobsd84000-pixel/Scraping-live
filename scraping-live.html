@@ -71,6 +71,15 @@
     .modal-content h2 { margin-bottom: 15px; }
     .modal-content p { margin-bottom: 20px; color: var(--color-text-secondary); }
     .modal-close { float: right; font-size: 24px; cursor: pointer; color: var(--color-text-secondary); }
+    .field { width: 100%; padding: 10px 12px; margin-bottom: 12px; font-size: 14px; background: var(--color-bg); color: var(--color-text-primary); border: 1px solid var(--color-border); border-radius: var(--color-radius); }
+    .field:focus { outline: none; border-color: var(--color-accent); }
+    .action[disabled] { opacity: 0.6; cursor: not-allowed; }
+    .result { margin-top: 16px; font-size: 12px; line-height: 1.6; max-height: 260px; overflow-y: auto; }
+    .result:empty { display: none; }
+    .result dl { display: grid; grid-template-columns: auto 1fr; gap: 4px 12px; }
+    .result dt { color: var(--color-text-secondary); text-transform: uppercase; font-size: 10px; letter-spacing: 0.5px; padding-top: 3px; }
+    .result dd { margin: 0; word-break: break-word; }
+    .result .error { color: #ef4444; }
   </style>
 </head>
 <body>
@@ -83,16 +92,16 @@
         <p>Intelligent web scraping with Claude API. No selector tuning needed.</p>
         <div class="stats">
           <div class="stat">
-            <div class="stat-value">94</div>
+            <div class="stat-value" id="statCount">0</div>
             <div class="stat-label">Sites Scraped</div>
           </div>
           <div class="stat">
-            <div class="stat-value">2.1s</div>
+            <div class="stat-value" id="statAvg">—</div>
             <div class="stat-label">Avg Time</div>
           </div>
         </div>
-        <button class="action" onclick="openModal('configure')">Configure</button>
-        <div class="note">Vercel API integration</div>
+        <button class="action" id="openScrape">Scrape a page</button>
+        <div class="note">Live — calls /api/scrape</div>
       </div>
       <div class="card">
         <h3>Agent Reach</h3>
@@ -107,7 +116,7 @@
             <div class="stat-label">Data Points/hr</div>
           </div>
         </div>
-        <button class="action" onclick="openModal('deploy')">Deploy</button>
+        <button class="action" data-info="deploy">Deploy</button>
         <div class="note">Vercel Functions</div>
       </div>
       <div class="card">
@@ -123,52 +132,127 @@
             <div class="stat-label">Uptime</div>
           </div>
         </div>
-        <button class="action" onclick="openModal('connect')">Connect</button>
+        <button class="action" data-info="connect">Connect</button>
         <div class="note">WebSocket streaming</div>
       </div>
     </div>
   </div>
 
-  <div id="modal" class="modal" onclick="closeModal(event)">
-    <div class="modal-content" onclick="event.stopPropagation()">
-      <span class="modal-close" onclick="closeModal()">&times;</span>
-      <h2 id="modalTitle">Configure</h2>
-      <p id="modalText">Set up your scraping parameters and API keys.</p>
-      <button class="action" onclick="closeModal()">Close</button>
+  <div id="modal" class="modal">
+    <div class="modal-content">
+      <span class="modal-close" id="modalClose">&times;</span>
+      <h2 id="modalTitle"></h2>
+      <p id="modalText"></p>
+      <form id="scrapeForm" hidden>
+        <input id="scrapeUrl" class="field" type="url" placeholder="https://example.com" required>
+        <button class="action" type="submit" id="scrapeSubmit">Run scrape</button>
+      </form>
+      <button class="action" id="modalDismiss" hidden>Close</button>
+      <div class="result" id="result"></div>
     </div>
   </div>
 
   <script>
-    const modalContent = {
-      configure: {
-        title: 'Configure ScrapeGraph AI',
-        text: 'Set up your scraping parameters and API keys. Connect to Claude API and configure your scraping rules.'
-      },
+    const modal = document.getElementById('modal');
+    const form = document.getElementById('scrapeForm');
+    const submit = document.getElementById('scrapeSubmit');
+    const dismiss = document.getElementById('modalDismiss');
+    const result = document.getElementById('result');
+
+    const info = {
       deploy: {
-        title: 'Deploy Agent Reach',
-        text: 'Launch multi-agent orchestration on Vercel Functions. Configure the number of agents and resource limits.'
+        title: 'Agent Reach',
+        text: 'Not wired up yet — this card has no backend. Only "Scrape a page" hits a real endpoint.'
       },
       connect: {
-        title: 'Connect Scraping MCP',
-        text: 'Establish WebSocket connection for real-time data streaming. Configure endpoints and authentication.'
+        title: 'Scraping MCP',
+        text: 'Not wired up yet — this card has no backend. Only "Scrape a page" hits a real endpoint.'
       }
     };
 
-    function openModal(type) {
-      const modal = document.getElementById('modal');
-      const content = modalContent[type];
-      document.getElementById('modalTitle').textContent = content.title;
-      document.getElementById('modalText').textContent = content.text;
+    let scrapeCount = 0;
+    let totalMs = 0;
+
+    function open({ title, text, showForm }) {
+      document.getElementById('modalTitle').textContent = title;
+      document.getElementById('modalText').textContent = text;
+      form.hidden = !showForm;
+      dismiss.hidden = showForm;
+      result.replaceChildren();
       modal.classList.add('open');
+      if (showForm) document.getElementById('scrapeUrl').focus();
     }
 
-    function closeModal(event) {
-      if (event && event.target.id !== 'modal') return;
-      document.getElementById('modal').classList.remove('open');
+    function close() {
+      modal.classList.remove('open');
     }
 
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') closeModal();
+    function row(list, label, value) {
+      const dt = document.createElement('dt');
+      dt.textContent = label;
+      const dd = document.createElement('dd');
+      dd.textContent = value;
+      list.append(dt, dd);
+    }
+
+    function render(data) {
+      const list = document.createElement('dl');
+      row(list, 'Status', data.status);
+      row(list, 'Time', `${data.elapsedMs} ms`);
+      row(list, 'Size', `${(data.bytes / 1024).toFixed(1)} KB`);
+      row(list, 'Title', data.title || '—');
+      if (data.description) row(list, 'Desc', data.description);
+      if (data.headings.length) row(list, 'Headings', data.headings.join(' · '));
+      row(list, 'Links', data.links);
+      row(list, 'Images', data.images);
+      result.replaceChildren(list);
+    }
+
+    function renderError(message) {
+      const p = document.createElement('p');
+      p.className = 'error';
+      p.textContent = message;
+      result.replaceChildren(p);
+    }
+
+    document.getElementById('openScrape').addEventListener('click', () => {
+      open({ title: 'Scrape a page', text: 'Enter a public URL. The server fetches it and returns what it found.', showForm: true });
+    });
+
+    document.querySelectorAll('[data-info]').forEach((button) => {
+      button.addEventListener('click', () => open({ ...info[button.dataset.info], showForm: false }));
+    });
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const url = document.getElementById('scrapeUrl').value.trim();
+      submit.disabled = true;
+      submit.textContent = 'Scraping…';
+      result.replaceChildren();
+      try {
+        const response = await fetch(`/api/scrape?url=${encodeURIComponent(url)}`);
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.error || `HTTP ${response.status}`);
+        render(data);
+        scrapeCount += 1;
+        totalMs += data.elapsedMs;
+        document.getElementById('statCount').textContent = scrapeCount;
+        document.getElementById('statAvg').textContent = `${(totalMs / scrapeCount / 1000).toFixed(1)}s`;
+      } catch (error) {
+        renderError(error.message);
+      } finally {
+        submit.disabled = false;
+        submit.textContent = 'Run scrape';
+      }
+    });
+
+    dismiss.addEventListener('click', close);
+    document.getElementById('modalClose').addEventListener('click', close);
+    modal.addEventListener('click', (event) => {
+      if (event.target === modal) close();
+    });
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape') close();
     });
   </script>
 </body>
