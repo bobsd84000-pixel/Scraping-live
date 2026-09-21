@@ -47,7 +47,7 @@ Chaque command est une `.md` avec stratégie et exemples.
 - `v3-security-overhaul` : sécurité
 - Autres : memory, integration, reasoning
 
-## Limitatiosn actuelles
+## Limitations actuelles
 
 **Blocage npm.org (403)** : `registry.npmjs.org` est inaccesible depuis cet environnement. Conséquences :
 
