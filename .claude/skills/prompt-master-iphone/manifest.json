@@ -1,0 +1,26 @@
+{
+  "name": "prompt-master-iphone",
+  "displayName": "Prompt Master for iPhone",
+  "description": "Use Prompt Master on iPhone via Claude.ai without CLI. Generate and refine AI prompts directly on mobile.",
+  "version": "1.0.0",
+  "author": "Scraping Live",
+  "license": "MIT",
+  "tags": [
+    "prompt-engineering",
+    "iPhone",
+    "mobile",
+    "claude-ai",
+    "utility"
+  ],
+  "triggers": [
+    "/prompt-master",
+    "prompt",
+    "generate prompt",
+    "refine prompt"
+  ],
+  "compatibility": {
+    "platforms": ["web", "ios"],
+    "minClaudeVersion": "1.0"
+  },
+  "documentation": "SKILL.md"
+}
