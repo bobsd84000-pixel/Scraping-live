@@ -65,6 +65,12 @@
     .action:hover { opacity: 0.9; }
     .action:active { transform: scale(0.98); }
     .note { font-size: 11px; color: var(--color-text-secondary); margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--color-border); }
+    .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center; }
+    .modal.open { display: flex; }
+    .modal-content { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--color-radius); padding: 30px; max-width: 400px; width: 90%; }
+    .modal-content h2 { margin-bottom: 15px; }
+    .modal-content p { margin-bottom: 20px; color: var(--color-text-secondary); }
+    .modal-close { float: right; font-size: 24px; cursor: pointer; color: var(--color-text-secondary); }
   </style>
 </head>
 <body>
@@ -85,7 +91,7 @@
             <div class="stat-label">Avg Time</div>
           </div>
         </div>
-        <button class="action">Configure</button>
+        <button class="action" onclick="openModal('configure')">Configure</button>
         <div class="note">Vercel API integration</div>
       </div>
       <div class="card">
@@ -101,7 +107,7 @@
             <div class="stat-label">Data Points/hr</div>
           </div>
         </div>
-        <button class="action">Deploy</button>
+        <button class="action" onclick="openModal('deploy')">Deploy</button>
         <div class="note">Vercel Functions</div>
       </div>
       <div class="card">
@@ -117,10 +123,53 @@
             <div class="stat-label">Uptime</div>
           </div>
         </div>
-        <button class="action">Connect</button>
+        <button class="action" onclick="openModal('connect')">Connect</button>
         <div class="note">WebSocket streaming</div>
       </div>
     </div>
   </div>
+
+  <div id="modal" class="modal" onclick="closeModal(event)">
+    <div class="modal-content" onclick="event.stopPropagation()">
+      <span class="modal-close" onclick="closeModal()">&times;</span>
+      <h2 id="modalTitle">Configure</h2>
+      <p id="modalText">Set up your scraping parameters and API keys.</p>
+      <button class="action" onclick="closeModal()">Close</button>
+    </div>
+  </div>
+
+  <script>
+    const modalContent = {
+      configure: {
+        title: 'Configure ScrapeGraph AI',
+        text: 'Set up your scraping parameters and API keys. Connect to Claude API and configure your scraping rules.'
+      },
+      deploy: {
+        title: 'Deploy Agent Reach',
+        text: 'Launch multi-agent orchestration on Vercel Functions. Configure the number of agents and resource limits.'
+      },
+      connect: {
+        title: 'Connect Scraping MCP',
+        text: 'Establish WebSocket connection for real-time data streaming. Configure endpoints and authentication.'
+      }
+    };
+
+    function openModal(type) {
+      const modal = document.getElementById('modal');
+      const content = modalContent[type];
+      document.getElementById('modalTitle').textContent = content.title;
+      document.getElementById('modalText').textContent = content.text;
+      modal.classList.add('open');
+    }
+
+    function closeModal(event) {
+      if (event && event.target.id !== 'modal') return;
+      document.getElementById('modal').classList.remove('open');
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeModal();
+    });
+  </script>
 </body>
 </html>
