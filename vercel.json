@@ -1,6 +1,5 @@
 {
   "version": 2,
-  "buildCommand": "echo 'Static site - no build required'",
   "public": true,
   "trailingSlash": false,
   "headers": [
@@ -27,6 +26,10 @@
     }
   ],
   "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/$1"
+    },
     {
       "source": "/",
       "destination": "/scraping-live.html"
