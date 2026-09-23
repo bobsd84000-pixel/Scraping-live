@@ -80,6 +80,8 @@
     .result dt { color: var(--color-text-secondary); text-transform: uppercase; font-size: 10px; letter-spacing: 0.5px; padding-top: 3px; }
     .result dd { margin: 0; word-break: break-word; }
     .result .error { color: #ef4444; }
+    .result pre { margin-top: 12px; padding: 10px; background: var(--color-bg); border: 1px solid var(--color-border); border-radius: var(--color-radius); white-space: pre-wrap; word-break: break-word; font-size: 11px; }
+    textarea.field { resize: vertical; min-height: 60px; font-family: inherit; }
   </style>
 </head>
 <body>
@@ -145,6 +147,7 @@
       <p id="modalText"></p>
       <form id="scrapeForm" hidden>
         <input id="scrapeUrl" class="field" type="url" placeholder="https://example.com" required>
+        <textarea id="scrapePrompt" class="field" maxlength="500" placeholder="Optional AI instruction, e.g. list product names and prices"></textarea>
         <button class="action" type="submit" id="scrapeSubmit">Run scrape</button>
       </form>
       <button class="action" id="modalDismiss" hidden>Close</button>
@@ -206,6 +209,11 @@
       row(list, 'Links', data.links);
       row(list, 'Images', data.images);
       result.replaceChildren(list);
+      if (data.ai !== undefined) {
+        const pre = document.createElement('pre');
+        pre.textContent = JSON.stringify(data.ai, null, 2);
+        result.append(pre);
+      }
     }
 
     function renderError(message) {
@@ -216,7 +224,7 @@
     }
 
     document.getElementById('openScrape').addEventListener('click', () => {
-      open({ title: 'Scrape a page', text: 'Enter a public URL. The server fetches it and returns what it found.', showForm: true });
+      open({ title: 'Scrape a page', text: 'Enter a public URL. Add an instruction to have Claude extract data as JSON.', showForm: true });
     });
 
     document.querySelectorAll('[data-info]').forEach((button) => {
@@ -226,11 +234,16 @@
     form.addEventListener('submit', async (event) => {
       event.preventDefault();
       const url = document.getElementById('scrapeUrl').value.trim();
+      const prompt = document.getElementById('scrapePrompt').value.trim();
       submit.disabled = true;
       submit.textContent = 'Scraping…';
       result.replaceChildren();
       try {
-        const response = await fetch(`/api/scrape?url=${encodeURIComponent(url)}`);
+        const response = await fetch('/api/scrape', {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify(prompt ? { url, prompt } : { url }),
+        });
         const data = await response.json();
         if (!response.ok) throw new Error(data.error || `HTTP ${response.status}`);
         render(data);

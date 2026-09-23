@@ -1,0 +1,8 @@
+{
+  "name": "scraping-live",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@anthropic-ai/sdk": "latest"
+  }
+}
