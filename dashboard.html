@@ -175,6 +175,7 @@
 
     document.getElementById('exportBtn').addEventListener('click', () => {
       const cats = Object.keys(data.categories);
+      if (!cats.length) { alert('No data to export'); return; }
       let csv = 'Timestamp,Value,Category\n';
       data.timestamps.forEach((t, i) => {
         csv += `${t},${data.values[i]},${cats[i % cats.length]}\n`;
