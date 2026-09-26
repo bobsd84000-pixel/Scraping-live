@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Les 3 outils pour aspirer tout Internet sans payer d'API</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            line-height: 1.6;
+            color: #1a1a1a;
+            background: #f9f9f9;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            color: white;
+            padding: 40px 20px;
+            border-radius: 12px;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 2.2em;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .badge {
+            display: inline-block;
+            background: #ffc107;
+            color: #1a1a1a;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 600;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+        }
+
+        .intro {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .intro h2 {
+            font-size: 1.4em;
+            margin-bottom: 15px;
+            color: #1a1a1a;
+        }
+
+        .intro p {
+            margin-bottom: 12px;
+            color: #4a4a4a;
+        }
+
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        .tool-card {
+            background: white;
+            border-radius: 12px;
+            padding: 28px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .tool-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        }
+
+        .tool-card h3 {
+            font-size: 1.5em;
+            margin-bottom: 15px;
+            color: #1a1a1a;
+        }
+
+        .tool-card .benefit {
+            background: #f0f0f0;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            font-size: 0.95em;
+            color: #333;
+        }
+
+        .tool-details {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+
+        .tool-details h4 {
+            font-size: 0.95em;
+            color: #666;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .installation {
+            background: #f5f5f5;
+            border-left: 3px solid #333;
+            padding: 12px;
+            margin: 12px 0;
+            border-radius: 4px;
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 0.85em;
+            overflow-x: auto;
+        }
+
+        .section {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .section h2 {
+            font-size: 1.6em;
+            margin-bottom: 20px;
+            color: #1a1a1a;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #ffc107;
+        }
+
+        .section h3 {
+            font-size: 1.1em;
+            margin-top: 20px;
+            margin-bottom: 12px;
+            color: #333;
+        }
+
+        .section ul {
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+
+        .section li {
+            margin-bottom: 8px;
+            color: #4a4a4a;
+        }
+
+        .highlight {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 15px 0;
+        }
+
+        .highlight strong {
+            color: #856404;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        .comparison-table th {
+            background: #f0f0f0;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+            border-bottom: 2px solid #ddd;
+        }
+
+        .comparison-table td {
+            padding: 12px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .comparison-table tr:hover {
+            background: #f9f9f9;
+        }
+
+        footer {
+            background: #1a1a1a;
+            color: white;
+            padding: 30px 20px;
+            border-radius: 12px;
+            text-align: center;
+            margin-top: 40px;
+        }
+
+        .cta {
+            background: #ffc107;
+            color: #1a1a1a;
+            padding: 15px 30px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-block;
+            margin-top: 15px;
+            transition: all 0.3s;
+        }
+
+        .cta:hover {
+            background: #ffb300;
+            transform: scale(1.05);
+        }
+
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 1.6em;
+            }
+
+            .container {
+                padding: 15px;
+            }
+
+            .section, .intro, .tool-card {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="badge">Ressource Gratuite</div>
+            <h1>Les 3 outils pour aspirer tout Internet sans payer d'API</h1>
+            <p>Trois outils open source qui donnent à ton agent IA l'accès aux pages web et aux réseaux sociaux, sans clé API payante. Gratuits, et ils tournent sur ta propre machine.</p>
+        </header>
+
+        <div class="intro">
+            <h2>Avant de commencer</h2>
+            <p><strong>Ce qu'il te faut :</strong></p>
+            <ul style="margin-left: 20px; margin-top: 10px;">
+                <li>Python 3.10 ou plus récent</li>
+                <li>Claude Code, Codex ou Cursor, pour lancer les commandes à la place</li>
+                <li>Ollama, si tu veux utiliser ScrapeGraphAI à 0 € (détails dans sa partie)</li>
+            </ul>
+            <p style="margin-top: 15px; background: #fff3cd; padding: 12px; border-radius: 6px; border-left: 3px solid #ffc107;"><strong style="color: #856404;">Tu ne codes pas ? Aucun souci.</strong> Colle chaque commande de ce guide dans Claude Code, demande-lui de l'exécuter et de corriger s'il bloque.</p>
+        </div>
+
+        <div class="tools-grid">
+            <div class="tool-card">
+                <h3>📊 ScrapeGraphAI</h3>
+                <div class="benefit">Tu décris, il rend des données rangées</div>
+                <p style="color: #666; font-size: 0.95em; margin-top: 10px;">Récupère les infos d'une page à partir d'une simple phrase. Tu lui donnes une URL et ce que tu veux, il te rend des données propres et rangées.</p>
+                <div class="tool-details">
+                    <h4>Le point à connaître</h4>
+                    <p style="font-size: 0.9em; color: #666;">Il s'appuie sur un modèle d'IA pour comprendre la page. Avec une clé OpenAI ou Gemini, tu comptes en tokens. Pour rester à 0 €, fais tourner avec un modèle local via Ollama.</p>
+                </div>
+            </div>
+
+            <div class="tool-card">
+                <h3>🔗 Agent Reach</h3>
+                <div class="benefit">Les réseaux sociaux verrouillés déverrouillés</div>
+                <p style="color: #666; font-size: 0.95em; margin-top: 10px;">Ouvre X, Reddit, YouTube, GitHub ou LinkedIn à ton agent, sans frais d'API. Tu lis ce que tu cherches, il sait quel outil appeler pour chaque plateforme.</p>
+                <div class="tool-details">
+                    <h4>Le point à connaître</h4>
+                    <p style="font-size: 0.9em; color: #666;">C'est un agent qui lit un fil Reddit, une recherche X ou la transcription d'une vidéo YouTube comme une simple page.</p>
+                </div>
+            </div>
+
+            <div class="tool-card">
+                <h3>🔄 Scraping</h3>
+                <div class="benefit">Suivre les changements sans bloquer</div>
+                <p style="color: #666; font-size: 0.95em; margin-top: 10px;">Un outil de scraping qui tourne en arrière-plan et Claude l'appelle dès qu'il a besoin d'une page. Il cible l'emplacement précis de la page : si le site déplace un bloc ou renomme un élément, la collecte s'arrête et refonte après, par similitude.</p>
+                <div class="tool-details">
+                    <h4>Le point à connaître</h4>
+                    <p style="font-size: 0.9em; color: #666;">C'est le mode adaptif : il retrouve les éléments après une refonte, fait toute la différence.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>1 · ScrapeGraphAI — l'extraction en une phrase</h2>
+
+            <p>ScrapeGraphAI récupère les infos d'une page à partir d'une simple phrase. Tu lui donnes une URL et ce que tu veux, il te rend des données propres et rangées.</p>
+
+            <h3>Ce que tu gagnes</h3>
+            <p>Des données prêtes à l'emploi en une phrase, même savoir comment une page est construite.</p>
+
+            <h3>Le point à connaître</h3>
+            <p>Il s'appuie sur un modèle d'IA pour comprendre la page. Avec une clé OpenAI ou Gemini, tu comptes en tokens. Pour rester à 0 €, fais tourner avec un modèle local via Ollama.</p>
+
+            <h3>Installation :</h3>
+            <div class="installation">pip install scrapegraphai<br>playwright install
+            </div>
+
+            <p style="margin-top: 15px;">Dans un environnement virtuel (Claude Code sait le créer). Installe ensuite Ollama, puis télécharge un modèle local :</p>
+
+            <div class="installation">ollama pull llama3.2</div>
+
+            <p style="margin-top: 15px;">Puis demande à Claude Code :</p>
+
+            <div class="installation">Écris et lance un script ScrapeGraphAI avec SmartScraperGraph et le modèle ollama/llama3.2. Extrais [ce que tu veux] de [URL] et enregistre le résultat en CSV.</div>
+
+            <h3>Plusieurs pages d'un coup ?</h3>
+            <p>SmartScraperMultiGraph prend une liste d'URL avec une seule consigne. SearchGraph part d'une recherche et extrait les infos des premiers résultats.</p>
+
+            <div class="highlight">
+                <strong>Attention :</strong> le serveur MCP et le site scrapegraphAI.com passent par leur API cloud, payante au crédit. Pour le 100 % gratuit, reste sur la bibliothèque open source. <br>
+                <strong>Bon à savoir :</strong> la bibliothèque envoie des statistiques d'usage anonymes. Pour les couper, définis la variable SCRAPEGRAPHAI_TELEMETRY_ENABLED=false.
+            </div>
+
+            <p style="margin-top: 15px;">Dépôt : <strong>ScrapeGraphAI/Scrapegraph-ai</strong></p>
+        </div>
+
+        <div class="section">
+            <h2>2 · Agent Reach — les plateformes verrouillées</h2>
+
+            <p>Agent Reach ouvre X, Reddit, YouTube, GitHub ou LinkedIn à ton agent, sans frais d'API. Tu lis ce que tu cherches, il sait quel outil appeler pour chaque plateforme.</p>
+
+            <h3>Ce que tu gagnes</h3>
+            <p>Un agent qui lit un fil Reddit, une recherche X ou la transcription d'une vidéo YouTube comme une simple page.</p>
+
+            <h3>Ce n'est pas un scraper plus : il choisit, installe et vérifie les meilleurs outils gratuits du moment. Quand une méthode d'accès casse, les mainteneurs passent à la suivante, sans action de ta part.</h3>
+
+            <h3>Plateforme suportée :</h3>
+            <table class="comparison-table">
+                <tr>
+                    <th>Plateforme</th>
+                    <th>Sans configuration</th>
+                    <th>Après connexion de ton compte</th>
+                </tr>
+                <tr>
+                    <td>Pages web et flux RSS</td>
+                    <td>Lecture n'importe quelle page ou flux</td>
+                    <td>—</td>
+                </tr>
+                <tr>
+                    <td>YouTube</td>
+                    <td>Sous-titres et recherche de vidéos</td>
+                    <td>—</td>
+                </tr>
+                <tr>
+                    <td>GitHub</td>
+                    <td>Dépôts publics et recherche</td>
+                    <td>Dépôts privés, issues, pull requests</td>
+                </tr>
+                <tr>
+                    <td>X (Twitter)</td>
+                    <td>Lecture d'un tweet précis</td>
+                    <td>Recherche, timelines, articles longs</td>
+                </tr>
+                <tr>
+                    <td>Reddit</td>
+                    <td>Rien, l'accès anonyme est bloqué</td>
+                    <td>Recherche, posts et commentaires</td>
+                </tr>
+                <tr>
+                    <td>LinkedIn</td>
+                    <td>Pages publiques</td>
+                    <td>Profils détaillés, pages entreprise, offres d'emploi</td>
+                </tr>
+                <tr>
+                    <td>Instagram et Facebook</td>
+                    <td>Rien</td>
+                    <td>Recherche, profils et pages, publications récentes</td>
+                </tr>
+            </table>
+
+            <p style="margin-top: 15px;"><em>« Connexion » veut dire lire la session de ton compte, pas une clé API. Il réutilise tes cookies ou ton Chrome déjà connecté sur la machine.</em></p>
+
+            <h3>Compte secondaire obligatoire :</h3>
+            <p>Les plateformes peuvent repérer un accès automatisé et suspendre le compte. Connecte un compte dédié, jamais ton compte principal.</p>
+
+            <h3>Piège à éviter :</h3>
+            <p>L'installe Agent Reach : https://raw.githubusercontent.com/Pannianting/agent-reach/main/docs/install.md</p>
+
+            <p style="margin-top: 15px;">Par défaut, il vérifie ton environnement sans rien modifier. Donne ton feu vert pour l'installation complète (option --system), qui ajoute les dépendances et le skill. Lance ensuite :</p>
+
+            <div class="installation">agent-reach doctor</div>
+
+            <p style="margin-top: 15px;">Il te dit quels canaux marchent et comment réparer les autres. Pour débloquer une plateforme, dis à ton agent : <em>« Configure › pour Agent Reach ».</em> Il te guide étape par étape.</p>
+
+            <h3>Mise à jour :</h3>
+            <p style="margin-top: 15px; display: flex; align-items: center; gap: 10px;">
+                <span>Mets à jour, même principe :</span>
+            </p>
+
+            <div style="margin-top: 15px;">
+                <div class="installation">Mets à jour Agent Reach : https://raw.githubusercontent.com/Pannianting/agent-reach/main/docs/update.md</div>
+            </div>
+
+            <p style="margin-top: 15px;">Le README principal est en chinois, la version anglaise est plus lisible. Dépôt : <strong>Pannianting/Agent-Reach</strong></p>
+        </div>
+
+        <div class="section">
+            <h2>3 · Scraping — le serveur MCP qui survit aux refontes</h2>
+
+            <p>Scraping continue de récupérer les données quand un site change de design, là où un scraper classique casse. Il passe aussi les protections anti-bot comme Cloudflare Turnstile.</p>
+
+            <h3>Ce que tu gagnes</h3>
+            <p>Un outil de scraping qui tourne en arrière-plan pour Claude, et des collectes régulières qui tiennent dans le temps.</p>
+
+            <h3>Un scraper classique vise l'emplacement précis de la page :</h3>
+            <p>Si le site déplace un bloc ou renomme un élément, la collecte s'arrête. Scraping mémorise ce que tu vises et le retrouve après une refonte, par similitude. C'est le mode adaptatif qui retrouve les éléments après une refonte, fait toute la différence.</p>
+
+            <h3>Deux façons de l'utiliser :</h3>
+            <ul style="margin-left: 20px; margin-top: 10px;">
+                <li><strong>En serveur MCP :</strong> il tourne arrière-plan et Claude l'appelle dès qu'il a besoin d'une page. Il cible la partie utile et bloque les pubs avant de la passer à Claude, donc moins de tokens consommés.</li>
+                <li><strong>En script :</strong> pour une collecte qui revient chaque semaine, c'est là que le mode adaptif qui retrouve les éléments après une refonte, fait toute la différence.</li>
+            </ul>
+
+            <h3>Installation du serveur MCP dans Claude Code :</h3>
+            <div class="installation">pip install "scrapling[all]"<br>scrapling install</div>
+
+            <p style="margin-top: 15px;">Récupère le chemin de l'exécutable (which scrapling sur Mac, where scrapling sur Windows), puis :</p>
+
+            <div class="installation">claude mcp add ScrapingServer "&lt;le chemin obtenu&gt;"</div>
+
+            <p style="margin-top: 15px;">Quitte et relance Claude Code.</p>
+
+            <p style="margin-top: 15px;">Dans tes demandes, précise le mode :</p>
+
+            <h3>Pour une collecte récurrente, demande à Claude Code :</h3>
+            <div class="installation">Écris un script Scraping qui enregistre les éléments avec auto_saveTrue au premier passage, puis les retrouve avec adaptive=true aux suivants.</div>
+
+            <h3>Sans code, en une ligne, pour enregistrer une page en markdown :</h3>
+            <div class="installation">scrapling extract get 'https://example.com' page.md</div>
+
+            <div class="highlight">
+                <strong>Bonus sécurité :</strong> le serveur MCP retire le texte caché des pages, une technique utilisée pour glisser des instructions piégées à l'IA.
+            </div>
+
+            <p style="margin-top: 15px;">Dépôt : <strong>D4Vinci/Scraping - README en français, guide du serveur MCP</strong></p>
+        </div>
+
+        <footer>
+            <p style="margin-bottom: 20px;">Réunis, ils couvrent une veille complète, et Claude Code sait les enchainer. Exemple de demande :</p>
+            <p style="background: #333; padding: 15px; border-radius: 6px; margin: 20px 0; font-style: italic;">Avec Agent Reach, récupère ce qu'il dit sur [marque] sur Reddit et X cette semaine. Avec ScrapeGraphAI, extrais les avis clients de [URL du site]. Rassemble tout dans un tableau.</p>
+            <p style="margin-top: 20px; color: #ccc;">Ces outils sont gratuits, mais pas sans règles. Cinq réflexes l'évitent un compte bloqué ou un souci juridique :</p>
+            <ul style="color: #ccc; margin-left: 20px; margin-top: 10px; text-align: left; display: inline-block;">
+                <li>Lis les conditions d'utilisation du site et le fichier robots.txt (exemple.com/robots.txt), qui indique ce qu'il autorise.</li>
+                <li>Espace les requêtes : bombarder un site le ralentit et fait bannir plus vite.</li>
+                <li>Pour les plateformes connectées, utilise un compte secondaire, jamais ton compte principal.</li>
+                <li>Publiques ou non, des données personnelles restent soumises au RGPD. Collecte le minimum, rensigne-toi avant de traiter.</li>
+                <li>Récupérer un contenu ne donne pas le droit du republier. Analyse-le, résume-le, mais ne recopie pas les articles entiers.</li>
+            </ul>
+        </footer>
+    </div>
+</body>
+</html>
