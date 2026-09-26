@@ -3,6 +3,9 @@
   "private": true,
   "type": "module",
   "dependencies": {
-    "@anthropic-ai/sdk": "latest"
+    "@anthropic-ai/sdk": "latest",
+    "ponytail": "file:./plugins/ponytail",
+    "graphify": "file:./plugins/graphify",
+    "agent-skills": "file:./plugins/agent-skills"
   }
 }
