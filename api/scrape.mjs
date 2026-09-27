@@ -149,12 +149,9 @@ async function aiExtract(prompt, url, text) {
     throw new HttpError(500, 'ANTHROPIC_API_KEY manquante dans les variables Vercel');
   }
   const client = new Anthropic();
-  const response = await client.beta.messages.create({
+  const response = await client.messages.create({
     model: 'claude-opus-5',
     max_tokens: 16000,
-    output_config: { effort: 'low' },
-    betas: ['server-side-fallback-2026-07-01'],
-    fallbacks: 'default',
     system: AI_SYSTEM,
     messages: [
       {
